@@ -5,15 +5,70 @@ import AddTask from "./components/AddTask";
 import TaskFilters from "./components/TaskFilters";
 import TaskList from "./components/TaskList";
 import RightPanel from "./components/RightPanel";
+import { useState } from "react";
 
 function App() {
+  const [tasks, setTasks] = useState([
+    {
+      id: 1,
+      title: "Build the StudyFlow UI",
+      type: "React",
+      date: "Today",
+      priority: "High",
+      completed: false,
+    },
+    {
+      id: 2,
+      title: "Solve array problems",
+      type: "DSA",
+      date: "Today",
+      priority: "Medium",
+      completed: true,
+    },
+    {
+      id: 3,
+      title: "practice authentication",
+      type: "Backend",
+      date: "Today",
+      priority: "Medium",
+      completed: true,
+    },
+  ]);
+
+  const completeClickHandler = (id) => {
+    setTasks((prevVal) => {
+      return prevVal.map((task) => {
+        if (task.id === id) {
+          return { ...task, completed: !task.completed };
+        }
+        return task;
+      });
+    });
+  };
+
+  const handleSubmit = (e, title, type, priority) => {
+    e.preventDefault();
+
+    setTasks((prevVal) => {
+      return [
+        ...prevVal,
+        {
+          title: title,
+          type: type,
+          priority: priority,
+          id: Date.now(),
+          completed: false,
+          date: "Today",
+        },
+      ];
+    });
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-white lg:grid lg:grid-cols-[220px_1fr_280px]">
-
       <Sidebar />
 
       <main className="min-w-0 bg-white px-5 py-6 dark:bg-slate-950 md:px-8">
-
         <Topbar />
 
         {/* Greeting */}
@@ -35,16 +90,14 @@ function App() {
 
         <Stats />
 
-        <AddTask />
+        <AddTask handleSubmit={handleSubmit} />
 
         <TaskFilters />
 
-        <TaskList />
-
+        <TaskList tasks={tasks} completeClickHandler={completeClickHandler} />
       </main>
 
       <RightPanel />
-
     </div>
   );
 }
