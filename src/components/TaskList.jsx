@@ -29,6 +29,17 @@ function TaskList() {
     },
   ]);
 
+  const completeClickHandler = (id) => {
+    setTasks((prevVal) => {
+      return prevVal.map((task) => {
+        if (task.id === id) {
+          return{...task, completed:!task.completed}
+        }
+        return task;
+      });
+    });
+  };
+
   return (
     <section className="space-y-3">
       {tasks.map((task) => {
@@ -36,6 +47,7 @@ function TaskList() {
           <TaskCard
             key={task.id}
             task={task}
+            completeClickHandler={completeClickHandler}
           />
         );
       })}

@@ -1,4 +1,4 @@
-function TaskCard({ task }) {
+function TaskCard({ task, completeClickHandler }) {
   return (
     <div
       className={`flex items-center gap-4 rounded-2xl border p-4 ${
@@ -9,6 +9,7 @@ function TaskCard({ task }) {
     >
       {/* Checkbox UI */}
       <div
+        onClick={()=>completeClickHandler(task.id)}
         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 ${
           task.completed
             ? "border-violet-600 bg-violet-600 text-xs text-white"
