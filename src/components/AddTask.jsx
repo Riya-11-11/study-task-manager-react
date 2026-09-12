@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function AddTask({ handleSubmit}) {
+function AddTask({ handleSubmit }) {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskType, setTaskType] = useState("");
   const [taskPriority, setTaskPriority] = useState("");
@@ -8,7 +8,14 @@ function AddTask({ handleSubmit}) {
   return (
     <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
       <form
-        onSubmit={(e) => handleSubmit(e, taskTitle, taskType, taskPriority)}
+        onSubmit={(e) => {
+          handleSubmit(e, taskTitle, taskType, taskPriority);
+          if ((taskTitle !== "" && taskType !== "") && taskPriority !== "") {
+            setTaskTitle("");
+            setTaskType("");
+            setTaskPriority("");
+          }
+        }}
         className="flex flex-col gap-3 md:flex-row"
       >
         <input

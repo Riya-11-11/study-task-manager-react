@@ -49,6 +49,10 @@ function App() {
   const handleSubmit = (e, title, type, priority) => {
     e.preventDefault();
 
+    if (title === "" || type === "" || priority === "") {
+      return;
+    }
+
     setTasks((prevVal) => {
       return [
         ...prevVal,
