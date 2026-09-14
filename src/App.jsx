@@ -68,6 +68,31 @@ function App() {
     });
   };
 
+  const handleEdit = (id, newTitle, newType, newPriority) => {
+    setTasks((prevVal) => {
+      return prevVal.map((task) => {
+        if (task.id === id) {
+          return {
+            ...task,
+            title: newTitle,
+            type: newType,
+            priority: newPriority
+          };
+        }
+        return task;
+      });
+    });
+  };
+
+  const handleDelete = (id) => {
+    setTasks((prevVal) => {
+      //by filter we can return the tasks whose id has not matched
+      return prevVal.filter((task) => {
+        return task.id !== id;
+      });
+    });
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-white lg:grid lg:grid-cols-[220px_1fr_280px]">
       <Sidebar />
@@ -98,7 +123,12 @@ function App() {
 
         <TaskFilters />
 
-        <TaskList tasks={tasks} completeClickHandler={completeClickHandler} />
+        <TaskList
+          tasks={tasks}
+          completeClickHandler={completeClickHandler}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+        />
       </main>
 
       <RightPanel />
