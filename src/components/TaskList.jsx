@@ -1,7 +1,6 @@
 import TaskCard from "./TaskCard";
-import { useState } from "react";
 
-function TaskList({ tasks, completeClickHandler, handleDelete, handleEdit }) {
+function TaskList({ tasks, completeClickHandler, handleDelete, handleEdit}) {
   return (
     <section className="space-y-3">
       {tasks.map((task) => {

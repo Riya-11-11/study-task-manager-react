@@ -35,6 +35,10 @@ function App() {
     },
   ]);
 
+  const [taskFilters, setTaskFilters] = useState("All");
+
+  const [searchTask, setSearchTask] = useState("");
+
   const completeClickHandler = (id) => {
     setTasks((prevVal) => {
       return prevVal.map((task) => {
@@ -76,7 +80,7 @@ function App() {
             ...task,
             title: newTitle,
             type: newType,
-            priority: newPriority
+            priority: newPriority,
           };
         }
         return task;
@@ -93,12 +97,36 @@ function App() {
     });
   };
 
+  const handleFilter = (filter) => {
+    setTaskFilters(filter);
+  };
+
+  let filteredTask = tasks;
+
+  if (taskFilters === "All") {
+    filteredTask = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchTask.toLowerCase()),
+    );
+  } else if (taskFilters === "Pending") {
+    filteredTask = tasks.filter(
+      (task) =>
+        task.completed === false &&
+        task.title.toLowerCase().includes(searchTask.toLowerCase()),
+    );
+  } else {
+    filteredTask = tasks.filter(
+      (task) =>
+        task.completed === true &&
+        task.title.toLowerCase().includes(searchTask.toLowerCase()),
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-white lg:grid lg:grid-cols-[220px_1fr_280px]">
       <Sidebar />
 
       <main className="min-w-0 bg-white px-5 py-6 dark:bg-slate-950 md:px-8">
-        <Topbar />
+        <Topbar searchTask={searchTask} setSearchTask={setSearchTask} />
 
         {/* Greeting */}
         <section className="my-8 flex items-center justify-between">
@@ -121,10 +149,10 @@ function App() {
 
         <AddTask handleSubmit={handleSubmit} />
 
-        <TaskFilters />
+        <TaskFilters taskFilters={taskFilters} handleFilter={handleFilter} />
 
         <TaskList
-          tasks={tasks}
+          tasks={filteredTask}
           completeClickHandler={completeClickHandler}
           handleDelete={handleDelete}
           handleEdit={handleEdit}
