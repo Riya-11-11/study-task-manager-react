@@ -121,6 +121,24 @@ function App() {
     );
   }
 
+  const totalTasks = tasks.length;
+
+  const completedTasks = tasks.filter((task) => {
+    return task.completed === true;
+  }).length;
+
+  const pendingTasks = tasks.filter((task) => {
+    return task.completed === false;
+  }).length;
+
+  let progress;
+
+  if (totalTasks === 0) {
+    progress = 0;
+  } else {
+    progress = Math.floor((completedTasks / totalTasks) * 100);
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-white lg:grid lg:grid-cols-[220px_1fr_280px]">
       <Sidebar />
@@ -145,7 +163,7 @@ function App() {
           </p>
         </section>
 
-        <Stats />
+        <Stats totalTasks={totalTasks} completedTasks={completedTasks} pendingTasks={pendingTasks} progress={progress} />
 
         <AddTask handleSubmit={handleSubmit} />
 
