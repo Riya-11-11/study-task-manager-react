@@ -1,4 +1,4 @@
-function RightPanel() {
+function RightPanel({totalTasks, completedTasks, pendingTasks, progress}) {
   return (
     <aside className="hidden border-l border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900 xl:block">
 
@@ -12,7 +12,7 @@ function RightPanel() {
         <div className="mx-auto my-6 flex h-32 w-32 flex-col items-center justify-center rounded-full border-[12px] border-violet-200 dark:border-violet-950">
 
           <strong className="text-2xl">
-            42%
+            {progress}%
           </strong>
 
           <span className="text-[10px] text-slate-400">
@@ -25,17 +25,17 @@ function RightPanel() {
 
           <p className="flex justify-between">
             <span>Completed</span>
-            <span>5</span>
+            <span>{completedTasks}</span>
           </p>
 
           <p className="flex justify-between">
             <span>Pending</span>
-            <span>7</span>
+            <span>{pendingTasks}</span>
           </p>
 
           <p className="flex justify-between font-semibold">
             <span>Total</span>
-            <span>12</span>
+            <span>{totalTasks}</span>
           </p>
 
         </div>

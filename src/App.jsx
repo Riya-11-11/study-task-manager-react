@@ -113,14 +113,32 @@ function App() {
         task.completed === false &&
         task.title.toLowerCase().includes(searchTask.toLowerCase()),
     );
-  } else {
+  } else if (taskFilters === "Completed") {
     filteredTask = tasks.filter(
       (task) =>
         task.completed === true &&
         task.title.toLowerCase().includes(searchTask.toLowerCase()),
     );
+  }  else if (taskFilters === "High") {
+    filteredTask = tasks.filter(
+      (task) =>
+        task.priority === "High" &&
+        task.title.toLowerCase().includes(searchTask.toLowerCase()),
+    );
+  } else if (taskFilters === "Medium") {
+    filteredTask = tasks.filter(
+      (task) =>
+        task.priority === "Medium" &&
+        task.title.toLowerCase().includes(searchTask.toLowerCase()),
+    );
+  } else if (taskFilters === "Low") {
+    filteredTask = tasks.filter(
+      (task) =>
+        task.priority === "Low" &&
+        task.title.toLowerCase().includes(searchTask.toLowerCase()),
+    );
   }
-
+  
   const totalTasks = tasks.length;
 
   const completedTasks = tasks.filter((task) => {
@@ -163,7 +181,12 @@ function App() {
           </p>
         </section>
 
-        <Stats totalTasks={totalTasks} completedTasks={completedTasks} pendingTasks={pendingTasks} progress={progress} />
+        <Stats
+          totalTasks={totalTasks}
+          completedTasks={completedTasks}
+          pendingTasks={pendingTasks}
+          progress={progress}
+        />
 
         <AddTask handleSubmit={handleSubmit} />
 
@@ -177,7 +200,12 @@ function App() {
         />
       </main>
 
-      <RightPanel />
+      <RightPanel
+        totalTasks={totalTasks}
+        completedTasks={completedTasks}
+        pendingTasks={pendingTasks}
+        progress={progress}
+      />
     </div>
   );
 }
