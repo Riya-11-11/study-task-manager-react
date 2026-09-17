@@ -7,50 +7,57 @@ import TaskList from "./components/TaskList";
 import RightPanel from "./components/RightPanel";
 import { useEffect, useState } from "react";
 
+const initialTasks = [
+  {
+    id: 1,
+    title: "Build the StudyFlow UI",
+    type: "React",
+    date: "Today",
+    priority: "High",
+    completed: false,
+  },
+  {
+    id: 2,
+    title: "Solve array problems",
+    type: "DSA",
+    date: "Today",
+    priority: "Medium",
+    completed: true,
+  },
+  {
+    id: 3,
+    title: "practice authentication",
+    type: "Backend",
+    date: "Today",
+    priority: "Medium",
+    completed: true,
+  },
+];
+
 function App() {
-  const initialTasks = [
-    {
-      id: 1,
-      title: "Build the StudyFlow UI",
-      type: "React",
-      date: "Today",
-      priority: "High",
-      completed: false,
-    },
-    {
-      id: 2,
-      title: "Solve array problems",
-      type: "DSA",
-      date: "Today",
-      priority: "Medium",
-      completed: true,
-    },
-    {
-      id: 3,
-      title: "practice authentication",
-      type: "Backend",
-      date: "Today",
-      priority: "Medium",
-      completed: true,
-    },
-  ];
+  //   let lsd = localStorage.getItem("tasks");
+  // let lsdData = JSON.parse(lsd);
+  // const [tasks, setTasks] = useState(lsd ? lsdData : initialTasks);
 
-  let lsd = localStorage.getItem("tasks");
-  let lsdData = JSON.parse(lsd);
+  const [tasks, setTasks] = useState(() => {
+    const lsd = localStorage.getItem("tasks");
 
-  const [tasks, setTasks] = useState(lsd ? lsdData : initialTasks);
+    if (lsd) {
+      return JSON.parse(lsd);
+    }
+
+    return initialTasks;
+  });
 
   const [taskFilters, setTaskFilters] = useState("All");
 
   const [searchTask, setSearchTask] = useState("");
 
-  // Day 9: Last Updated state
   const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
-    setLastUpdated(new Date().toLocaleTimeString())
-  }, [tasks])
-  
+    setLastUpdated(new Date().toLocaleTimeString());
+  }, [tasks]);
 
   const completeClickHandler = (id) => {
     setTasks((prevVal) => {
@@ -238,4 +245,3 @@ function App() {
 }
 
 export default App;
-
