@@ -5,10 +5,10 @@ import AddTask from "./components/AddTask";
 import TaskFilters from "./components/TaskFilters";
 import TaskList from "./components/TaskList";
 import RightPanel from "./components/RightPanel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [tasks, setTasks] = useState([
+  let initialTasks = [
     {
       id: 1,
       title: "Build the StudyFlow UI",
@@ -33,7 +33,11 @@ function App() {
       priority: "Medium",
       completed: true,
     },
-  ]);
+  ];
+  let lsd = localStorage.getItem("tasks");
+  let lsdData = JSON.parse(lsd);
+
+  const [tasks, setTasks] = useState(lsd ? lsdData : initialTasks);
 
   const [taskFilters, setTaskFilters] = useState("All");
 
@@ -57,9 +61,9 @@ function App() {
       return;
     }
 
-    setTasks((prevVal) => {
+    setTasks((prevTasks) => {
       return [
-        ...prevVal,
+        ...prevTasks,
         {
           title: title,
           type: type,
@@ -71,6 +75,10 @@ function App() {
       ];
     });
   };
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleEdit = (id, newTitle, newType, newPriority) => {
     setTasks((prevVal) => {
@@ -119,7 +127,7 @@ function App() {
         task.completed === true &&
         task.title.toLowerCase().includes(searchTask.toLowerCase()),
     );
-  }  else if (taskFilters === "High") {
+  } else if (taskFilters === "High") {
     filteredTask = tasks.filter(
       (task) =>
         task.priority === "High" &&
@@ -138,7 +146,7 @@ function App() {
         task.title.toLowerCase().includes(searchTask.toLowerCase()),
     );
   }
-  
+
   const totalTasks = tasks.length;
 
   const completedTasks = tasks.filter((task) => {
