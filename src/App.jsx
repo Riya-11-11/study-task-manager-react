@@ -8,7 +8,7 @@ import RightPanel from "./components/RightPanel";
 import { useEffect, useState } from "react";
 
 function App() {
-  let initialTasks = [
+  const initialTasks = [
     {
       id: 1,
       title: "Build the StudyFlow UI",
@@ -34,6 +34,7 @@ function App() {
       completed: true,
     },
   ];
+
   let lsd = localStorage.getItem("tasks");
   let lsdData = JSON.parse(lsd);
 
@@ -42,6 +43,14 @@ function App() {
   const [taskFilters, setTaskFilters] = useState("All");
 
   const [searchTask, setSearchTask] = useState("");
+
+  // Day 9: Last Updated state
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    setLastUpdated(new Date().toLocaleTimeString())
+  }, [tasks])
+  
 
   const completeClickHandler = (id) => {
     setTasks((prevVal) => {
@@ -98,7 +107,6 @@ function App() {
 
   const handleDelete = (id) => {
     setTasks((prevVal) => {
-      //by filter we can return the tasks whose id has not matched
       return prevVal.filter((task) => {
         return task.id !== id;
       });
@@ -196,6 +204,17 @@ function App() {
           progress={progress}
         />
 
+        {/* Day 9: Last Updated UI */}
+        <section className="mt-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-3 dark:border-slate-800 dark:bg-slate-900">
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Last updated
+          </p>
+
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
+            {lastUpdated ? lastUpdated : "Not updated yet"}
+          </p>
+        </section>
+
         <AddTask handleSubmit={handleSubmit} />
 
         <TaskFilters taskFilters={taskFilters} handleFilter={handleFilter} />
@@ -219,3 +238,4 @@ function App() {
 }
 
 export default App;
+
