@@ -35,8 +35,8 @@ import { useEffect, useState } from "react";
 // ];
 
 function App() {
-  //   let lsd = localStorage.getItem("tasks");
-  // let lsdData = JSON.parse(lsd);
+  // const lsd = localStorage.getItem("tasks");
+  // const lsdData = JSON.parse(lsd);
   // const [tasks, setTasks] = useState(lsd ? lsdData : initialTasks);
 
   // const [tasks, setTasks] = useState(() => {
@@ -57,57 +57,70 @@ function App() {
 
   const [lastUpdated, setLastUpdated] = useState(null);
 
+  // Update last updated time whenever tasks change
   useEffect(() => {
     setLastUpdated(new Date().toLocaleTimeString());
   }, [tasks]);
 
+  // Complete / uncomplete task
   const completeClickHandler = (id) => {
     setTasks((prevVal) => {
       return prevVal.map((task) => {
         if (task.id === id) {
-          return { ...task, completed: !task.completed };
+          return {
+            ...task,
+            completed: !task.completed,
+          };
         }
+
         return task;
       });
     });
   };
 
-  const handleSubmit = (e, title, type, priority) => {
+  // Add new task using POST API
+  const handleSubmit = async (e, title, type, priority) => {
     e.preventDefault();
 
     if (title === "" || type === "" || priority === "") {
       return;
     }
 
-    setTasks((prevTasks) => {
-      return [
-        ...prevTasks,
-        {
-          title: title,
-          type: type,
-          priority: priority,
-          id: Date.now(),
-          completed: false,
-          date: "Today",
-        },
-      ];
+    const res = await fetch("/api/tasks", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        title,
+        type,
+        priority,
+      }),
+    });
+
+    const data = await res.json();
+
+    setTasks((prevVal) => {
+      return [...prevVal, data.data];
     });
   };
 
+  // Get all tasks when app loads
   useEffect(() => {
     const fetchedTasks = async () => {
       const res = await fetch("/api/tasks");
+
       const data = await res.json();
+
       setTasks(data.data);
     };
 
     fetchedTasks();
   }, []);
 
-  // useEffect(() => {
-  //   localStorage.setItem("tasks", JSON.stringify(tasks));
-  // }, [tasks]);
-
+  // Edit task
   const handleEdit = (id, newTitle, newType, newPriority) => {
     setTasks((prevVal) => {
       return prevVal.map((task) => {
@@ -119,11 +132,13 @@ function App() {
             priority: newPriority,
           };
         }
+
         return task;
       });
     });
   };
 
+  // Delete task
   const handleDelete = (id) => {
     setTasks((prevVal) => {
       return prevVal.filter((task) => {
@@ -132,10 +147,12 @@ function App() {
     });
   };
 
+  // Change filter
   const handleFilter = (filter) => {
     setTaskFilters(filter);
   };
 
+  // Filter tasks
   let filteredTask = tasks;
 
   if (taskFilters === "All") {
@@ -174,6 +191,7 @@ function App() {
     );
   }
 
+  // Statistics
   const totalTasks = tasks.length;
 
   const completedTasks = tasks.filter((task) => {
@@ -197,7 +215,10 @@ function App() {
       <Sidebar />
 
       <main className="min-w-0 bg-white px-5 py-6 dark:bg-slate-950 md:px-8">
-        <Topbar searchTask={searchTask} setSearchTask={setSearchTask} />
+        <Topbar
+          searchTask={searchTask}
+          setSearchTask={setSearchTask}
+        />
 
         {/* Greeting */}
         <section className="my-8 flex items-center justify-between">
@@ -223,7 +244,7 @@ function App() {
           progress={progress}
         />
 
-        {/* Day 9: Last Updated UI */}
+        {/* Last Updated */}
         <section className="mt-4 flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-3 dark:border-slate-800 dark:bg-slate-900">
           <p className="text-sm text-slate-500 dark:text-slate-400">
             Last updated
@@ -236,7 +257,10 @@ function App() {
 
         <AddTask handleSubmit={handleSubmit} />
 
-        <TaskFilters taskFilters={taskFilters} handleFilter={handleFilter} />
+        <TaskFilters
+          taskFilters={taskFilters}
+          handleFilter={handleFilter}
+        />
 
         <TaskList
           tasks={filteredTask}

@@ -30,12 +30,22 @@ const tasks = [
 ];
 
 router.post("/api/tasks", (req, res) => {
-  const { tasks } = req.body;
+  const { title, type, priority } = req.body;
 
   try {
+    const newTask = {
+      id: Date.now(),
+      title,
+      type,
+      priority,
+      date: "Today",
+      completed: false,
+    };
+
+    tasks.push(newTask);
     res.status(201).json({
       message: "Task has added successfully",
-      data: { tasks },
+      data: newTask,
     });
   } catch (error) {
     res.status(500).json({
