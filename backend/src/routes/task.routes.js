@@ -55,7 +55,7 @@ router.post("/api/tasks", (req, res) => {
   }
 });
 
-//read data from server
+//reads data from server
 router.get("/api/tasks", (req, res) => {
   try {
     res.status(200).json({
@@ -66,6 +66,50 @@ router.get("/api/tasks", (req, res) => {
     res.status(500).json({
       message: "Internal server error",
       error: error.message,
+    });
+  }
+});
+
+router.patch("/api/tasks/:id", (req, res) => {
+  const id = req.params.id; //string
+  const { title, type, priority } = req.body;
+
+  try {
+    const task = tasks.find((task) => {
+      if (Number(id) === task.id) {
+        return task;
+      }
+    });
+
+    const updatedTask = tasks.map((task) => {
+      if (task.id === Number(id)) {
+        return {
+          ...task,
+          title,
+          type,
+          priority,
+        };
+      }
+
+      return task;
+    });
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Task Doesn't exists",
+      });
+    }
+
+    tasks.splice(0, tasks.length, ...updatedTask);
+
+    res.status(200).json({
+      message: "Tasks updated successfully",
+      data: tasks,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
     });
   }
 });
