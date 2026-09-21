@@ -121,21 +121,25 @@ function App() {
   }, []);
 
   // Edit task
-  const handleEdit = (id, newTitle, newType, newPriority) => {
-    setTasks((prevVal) => {
-      return prevVal.map((task) => {
-        if (task.id === id) {
-          return {
-            ...task,
-            title: newTitle,
-            type: newType,
-            priority: newPriority,
-          };
-        }
 
-        return task;
-      });
+  const handleEdit = async (id, newTitle, newType, newPriority) => {
+    const res = await fetch(`/api/tasks/${id}`, {
+      method: "PATCH",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        title: newTitle,
+        type: newType,
+        priority: newPriority,
+      }),
     });
+
+    const data = await res.json();
+
+    setTasks(data.data);
   };
 
   // Delete task
@@ -215,10 +219,7 @@ function App() {
       <Sidebar />
 
       <main className="min-w-0 bg-white px-5 py-6 dark:bg-slate-950 md:px-8">
-        <Topbar
-          searchTask={searchTask}
-          setSearchTask={setSearchTask}
-        />
+        <Topbar searchTask={searchTask} setSearchTask={setSearchTask} />
 
         {/* Greeting */}
         <section className="my-8 flex items-center justify-between">
@@ -257,10 +258,7 @@ function App() {
 
         <AddTask handleSubmit={handleSubmit} />
 
-        <TaskFilters
-          taskFilters={taskFilters}
-          handleFilter={handleFilter}
-        />
+        <TaskFilters taskFilters={taskFilters} handleFilter={handleFilter} />
 
         <TaskList
           tasks={filteredTask}
