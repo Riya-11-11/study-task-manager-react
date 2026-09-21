@@ -103,10 +103,42 @@ router.patch("/api/tasks/:id", (req, res) => {
     tasks.splice(0, tasks.length, ...updatedTask);
 
     res.status(200).json({
-      message: "Tasks updated successfully",
+      message: "Task updated successfully",
       data: tasks,
     });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+    });
+  }
+});
 
+router.delete("/api/tasks/:id", (req, res) => {
+  const id = req.params.id;
+  try {
+    const task = tasks.find((task) => {
+      if (Number(id) === task.id) {
+        return task;
+      }
+    });
+
+    const deletedTask = tasks.filter((task) => {
+      if (Number(id) !== task.id) {
+        return task;
+      }
+    });
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Task Doesn't exists",
+      });
+    }
+    tasks.splice(0, tasks.length, ...deletedTask);
+
+    res.status(200).json({
+      message: "Task deleted sUccessfully ",
+      data: tasks,
+    });
   } catch (error) {
     return res.status(500).json({
       error: "Internal Server Error",
